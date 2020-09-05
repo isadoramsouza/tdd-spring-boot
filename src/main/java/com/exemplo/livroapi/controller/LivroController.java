@@ -37,8 +37,7 @@ public class LivroController {
             @ApiResponse(code = 500, message = "Erro durante a operação.")
     })
     public ResponseEntity<LivroDTO> criarLivro(@RequestBody LivroDTO livroDTO) {
-        Livro livro = livroService.criarLivro(livroDTO);
-        return new ResponseEntity<>(modelMapper.map(livro, LivroDTO.class), HttpStatus.CREATED);
+        return new ResponseEntity<>(livroService.criarLivro(livroDTO), HttpStatus.CREATED);
     }
 
 

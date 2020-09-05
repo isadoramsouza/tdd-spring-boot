@@ -1,7 +1,6 @@
 package com.exemplo.livroapi.controller;
 
 import com.exemplo.livroapi.dto.LivroDTO;
-import com.exemplo.livroapi.model.Livro;
 import com.exemplo.livroapi.service.LivroService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.DisplayName;
@@ -42,7 +41,7 @@ public class LivroControllerTest {
     public void criarLivroTest() throws Exception {
 
         LivroDTO livroDTO = criaLivroDTO();
-        Livro livroCriado = criaLivro();
+        LivroDTO livroCriado = criaLivro();
 
         BDDMockito.given(livroService.criarLivro(Mockito.any(LivroDTO.class))).willReturn(livroCriado);
         String json = new ObjectMapper().writeValueAsString(livroDTO);
@@ -75,8 +74,8 @@ public class LivroControllerTest {
                 .isbn("9780007525546").build();
     }
 
-    private Livro criaLivro(){
-        return Livro.builder()
+    private LivroDTO criaLivro(){
+        return LivroDTO.builder()
                 .id(1L)
                 .titulo("Senhor dos Anéis")
                 .autor("J R. R. Tolkien")

@@ -1,7 +1,6 @@
 package com.exemplo.livroapi.service;
 
 import com.exemplo.livroapi.dto.LivroDTO;
-import com.exemplo.livroapi.model.Livro;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
@@ -17,8 +16,8 @@ public class LivroService {
         this.modelMapper = modelMapper;
     }
 
-    public Livro criarLivro(LivroDTO livroDTO) {
-        return modelMapper.map(livroDTO, Livro.class);
+    public LivroDTO criarLivro(LivroDTO livroDTO) {
+        return livroDTO;
     }
 
 }
