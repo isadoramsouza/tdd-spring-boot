@@ -41,7 +41,7 @@ public class LivroControllerTest {
     public void criarLivroTest() throws Exception {
 
         LivroDTO livroDTO = criaLivroDTO();
-        LivroDTO livroCriado = criaLivro();
+        LivroDTO livroCriado = retornaLivroCriadoDTO();
 
         BDDMockito.given(livroService.criarLivro(Mockito.any(LivroDTO.class))).willReturn(livroCriado);
         String json = new ObjectMapper().writeValueAsString(livroDTO);
@@ -74,7 +74,7 @@ public class LivroControllerTest {
                 .isbn("9780007525546").build();
     }
 
-    private LivroDTO criaLivro(){
+    private LivroDTO retornaLivroCriadoDTO(){
         return LivroDTO.builder()
                 .id(1L)
                 .titulo("Senhor dos Anéis")
