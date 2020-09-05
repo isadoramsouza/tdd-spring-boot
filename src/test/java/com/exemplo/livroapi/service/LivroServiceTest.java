@@ -1,12 +1,16 @@
 package com.exemplo.livroapi.service;
 
 import com.exemplo.livroapi.dto.LivroDTO;
+import com.exemplo.livroapi.exception.IsbnCadastradoException;
+import com.exemplo.livroapi.exception.UnprocessableEntityException;
 import com.exemplo.livroapi.model.Livro;
 import com.exemplo.livroapi.repository.LivroRepository;
+import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.Mockito;
 import org.modelmapper.ModelMapper;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.context.ActiveProfiles;
@@ -36,18 +40,34 @@ public class LivroServiceTest {
     @Test
     @DisplayName("Deve criar um livro")
     public void criarLivroTest(){
-
         LivroDTO livroDTO = criaLivroDTO();
         Livro livroCriado = retornaLivroCriado();
-
         when(livroRepository.saveAndFlush(modelMapper.map(livroDTO, Livro.class))).thenReturn(livroCriado);
-
         LivroDTO livroCriadoDTO = livroService.criarLivro(livroDTO);
-
         assertThat(livroCriadoDTO.getId()).isNotNull();
         assertThat(livroCriadoDTO.getTitulo()).isEqualTo("Senhor dos Anéis");
         assertThat(livroCriadoDTO.getAutor()).isEqualTo("J R. R. Tolkien");
         assertThat(livroCriadoDTO.getIsbn()).isEqualTo("9780007525546");
+    }
+
+    @Test
+    @DisplayName("Deve lançar erro ao criar um livro com argumentos nulos.")
+    public void criarLivroComArgumentosNulosTest() {
+        LivroDTO livroDTO = new LivroDTO();
+        Throwable exception = Assertions.catchThrowable(() -> livroService.criarLivro(livroDTO));
+        assertThat(exception)
+                .isInstanceOf(UnprocessableEntityException.class);
+    }
+
+    @Test
+    @DisplayName("Deve lançar erro ao criar um livro com isbn já utilizado.")
+    public void criarLivroComIsbnDuplicadoTest() {
+        LivroDTO livroDTO = criaLivroDTO();
+        when(livroRepository.existsByIsbn(Mockito.anyString())).thenReturn(true);
+        Throwable exception = Assertions.catchThrowable(() -> livroService.criarLivro(livroDTO));
+        assertThat(exception)
+                .isInstanceOf(IsbnCadastradoException.class);
+        Mockito.verify(livroRepository, Mockito.never()).saveAndFlush(modelMapper.map(livroDTO, Livro.class));
     }
 
     private LivroDTO criaLivroDTO(){
