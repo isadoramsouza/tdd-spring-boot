@@ -44,7 +44,7 @@ public class LivroControllerTest {
         LivroDTO livroDTO = criaLivroDTO();
         Livro livroCriado = criaLivro();
 
-        BDDMockito.given(livroService.criarLivro(Mockito.any(Livro.class))).willReturn(livroCriado);
+        BDDMockito.given(livroService.criarLivro(Mockito.any(LivroDTO.class))).willReturn(livroCriado);
         String json = new ObjectMapper().writeValueAsString(livroDTO);
 
         MockHttpServletRequestBuilder request = MockMvcRequestBuilders
