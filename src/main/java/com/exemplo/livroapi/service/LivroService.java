@@ -2,7 +2,7 @@ package com.exemplo.livroapi.service;
 
 import com.exemplo.livroapi.dto.LivroDTO;
 import com.exemplo.livroapi.exception.IsbnCadastradoException;
-import com.exemplo.livroapi.exception.UnprocessableEntityException;
+import com.exemplo.livroapi.exception.LivroNotFoundException;
 import com.exemplo.livroapi.model.Livro;
 import com.exemplo.livroapi.repository.LivroRepository;
 import org.modelmapper.ModelMapper;
@@ -23,9 +23,6 @@ public class LivroService {
     }
 
     public LivroDTO criarLivro(LivroDTO livroDTO) {
-        if(livroDTO.getTitulo()==null || livroDTO.getAutor()==null || livroDTO.getIsbn()==null){
-            throw new UnprocessableEntityException();
-        }
         if(livroRepository.existsByIsbn(livroDTO.getIsbn())){
             throw new IsbnCadastradoException();
         }
@@ -33,4 +30,8 @@ public class LivroService {
         return modelMapper.map(livro, LivroDTO.class);
     }
 
+    public LivroDTO findLivroById(Long id) {
+        Livro livro = livroRepository.findById(id).orElseThrow(() -> new LivroNotFoundException(id));
+        return modelMapper.map(livro, LivroDTO.class);
+    }
 }
